@@ -69,15 +69,19 @@ public abstract class BlockChest extends BlockContainer implements IRaytracable 
 
 				if (result.hitID == 0) {
 					if (!tile.isLocked(player)) {
-						if (world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN)) {
-							return true;
-						} else if (UtilEntity.isOcelotSittingOn(world, x, y, z)) {
+						if (!player.isSneaking()) {
+							if (world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN)) {
+								return true;
+							} else if (UtilEntity.isOcelotSittingOn(world, x, y, z)) {
+								return true;
+							}
+
+							player.displayGUIChest((IInventory) tile);
 							return true;
 						}
-
-						player.displayGUIChest((IInventory) tile);
 					} else {
 						player.addChatComponentMessage(new ChatComponentText("You find this chest to be locked, and cannot be opened."));
+						return true;
 					}
 				} else if (result.hitID == 1) {
 					if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == ChestsPlus.instance.itemKey) {
@@ -91,7 +95,7 @@ public abstract class BlockChest extends BlockContainer implements IRaytracable 
 			}
 		}
 
-		return true;
+		return !player.isSneaking();
 	}
 
 	@Override
