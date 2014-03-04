@@ -26,6 +26,22 @@ public abstract class TileChest extends TileEntity implements IInventory {
 	public int numUsingPlayers;
 	private int ticksSinceSync;
 
+	public String owner = "";
+
+	public boolean locked = false;
+
+	public boolean isOwner(EntityPlayer player) {
+		return owner.equals("") || player.getCommandSenderName().equals(owner);
+	}
+
+	public boolean isLocked(EntityPlayer player) {
+		if (locked) {
+			return !isOwner(player);
+		} else {
+			return false;
+		}
+	}
+
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
