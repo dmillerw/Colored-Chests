@@ -1,0 +1,12 @@
+[
+{
+	"modid": "CChests",
+	"name": "Colored Chests",
+	"version": "@VERSION@",
+	"description": "Need I say more?",
+	"authors": [ "dmillerw" ],
+	"dependencies": [
+		"mod_MinecraftForge"
+	]
+}
+]
