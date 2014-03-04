@@ -1,13 +1,13 @@
 package dmillerw.cchests.util;
 
-import java.util.Iterator;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.Iterator;
 
 public class UtilEntity {
 
@@ -24,24 +24,24 @@ public class UtilEntity {
 		} else if (clampedAngle == 3) {
 			face = 4;
 		}
-		
+
 		return ForgeDirection.getOrientation(face);
 	}
-	
+
 	public static boolean isOcelotSittingOn(World world, int x, int y, int z) {
 		Iterator iterator = world.getEntitiesWithinAABB(EntityOcelot.class, AxisAlignedBB.getAABBPool().getAABB((double) x, (double) (y + 1), (double) z, (double) (x + 1), (double) (y + 2), (double) (z + 1))).iterator();
-		
+
 		if (!iterator.hasNext()) {
 			return false;
 		} else {
-			while(iterator.hasNext()) {
-				if (((EntityOcelot)iterator.next()).isSitting()) {
+			while (iterator.hasNext()) {
+				if (((EntityOcelot) iterator.next()).isSitting()) {
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 }

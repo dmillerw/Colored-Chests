@@ -1,36 +1,30 @@
 package dmillerw.cchests.client.render;
 
+import dmillerw.cchests.ColoredChests;
+import dmillerw.cchests.block.tile.TileDynamicChest;
+import dmillerw.cchests.lib.ModInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.IItemRenderer;
-
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import dmillerw.cchests.ColoredChests;
-import dmillerw.cchests.block.tile.TileDynamicChest;
-import dmillerw.cchests.client.handler.TextureHandler;
-import dmillerw.cchests.lib.ModInfo;
 
 public class RenderDynamicChest extends TileEntitySpecialRenderer implements IItemRenderer {
 
 	private static final ResourceLocation RES_NORMAL_SINGLE = new ResourceLocation(ModInfo.RESOURCE_PREFIX + "textures/normalTrans.png");
 	
 	private ModelChest chestModel = new ModelChest();
-	
-	public void renderColoredChestAt(TileDynamicChest tile, double x, double y, double z, float partial) {
+
+	public void renderDynamicChestAt(TileDynamicChest tile, double x, double y, double z, float partial) {
 		int meta = tile.getBlockMetadata();
 		int i;
 
@@ -71,10 +65,10 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
         float f2;
         f1 = 1.0F - f1;
         f1 = 1.0F - f1 * f1 * f1;
-        
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, TextureHandler.getChestTextureForBlock(tile.mimickStack != null ? tile.mimickStack : new ItemStack(Block.stone)).getGlTextureId());
-        
-        this.chestModel.chestLid.rotateAngleX = -(f1 * (float)Math.PI / 2.0F);
+
+		Minecraft.getMinecraft().renderEngine.bindTexture(RES_NORMAL_SINGLE);
+
+		this.chestModel.chestLid.rotateAngleX = -(f1 * (float)Math.PI / 2.0F);
         
         this.chestModel.chestKnob.rotateAngleX = this.chestModel.chestLid.rotateAngleX;
         this.chestModel.chestLid.render(0.0625F);
@@ -88,8 +82,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 	private float interpolatedCoords(int pos) {
 		return (float) (0.0625 * pos);
 	}
-	
-	private void renderLidOverlay(TileDynamicChest tile, Tessellator t, Icon icon) {
+
+	private void renderLidOverlay(TileDynamicChest tile, Tessellator t, IIcon IIcon) {
 		GL11.glPushMatrix();
 		
 		GL11.glTranslatef(this.chestModel.chestLid.rotationPointX * 0.0625F, this.chestModel.chestLid.rotationPointY * 0.0625F, this.chestModel.chestLid.rotationPointZ * 0.0625F);
@@ -107,138 +101,138 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		/* LID FRONT */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord - 1, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(6), interpolatedCoords(1), icon.getInterpolatedU(2),  icon.getInterpolatedV(6));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(1), icon.getInterpolatedU(14), icon.getInterpolatedV(6));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(3), interpolatedCoords(1), icon.getInterpolatedU(14), icon.getInterpolatedV(3));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(3), interpolatedCoords(1), icon.getInterpolatedU(2),  icon.getInterpolatedV(3));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord - 1, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(6), interpolatedCoords(1), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(6));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(1), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(6));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(3), interpolatedCoords(1), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(3));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(3), interpolatedCoords(1), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(3));
+		t.draw();
         
         /* LID RIGHT */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(6), interpolatedCoords(2),  icon.getInterpolatedU(2),  icon.getInterpolatedV(6));
-        t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(6), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(6));
-        t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(3), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(3));
-        t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(3), interpolatedCoords(2),  icon.getInterpolatedU(2),  icon.getInterpolatedV(3));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(6), interpolatedCoords(2), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(6));
+		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(6), interpolatedCoords(14), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(6));
+		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(3), interpolatedCoords(14), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(3));
+		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(3), interpolatedCoords(2), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(3));
+		t.draw();
         
         /* LID LEFT */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(6), interpolatedCoords(14),  icon.getInterpolatedU(2),  icon.getInterpolatedV(6));
-        t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(6), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(6));
-        t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(3), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(3));
-        t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(3), interpolatedCoords(14),  icon.getInterpolatedU(2),  icon.getInterpolatedV(3));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(6), interpolatedCoords(14), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(6));
+		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(6), interpolatedCoords(2), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(6));
+		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(3), interpolatedCoords(2), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(3));
+		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(3), interpolatedCoords(14), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(3));
+		t.draw();
         
         /* LID BACK */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(14),  interpolatedCoords(6), interpolatedCoords(15), icon.getInterpolatedU(2),  icon.getInterpolatedV(6));
-        t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(6), interpolatedCoords(15), icon.getInterpolatedU(14), icon.getInterpolatedV(6));
-        t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(3), interpolatedCoords(15), icon.getInterpolatedU(14), icon.getInterpolatedV(3));
-        t.addVertexWithUV(interpolatedCoords(14),  interpolatedCoords(3), interpolatedCoords(15), icon.getInterpolatedU(2),  icon.getInterpolatedV(3));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(15), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(6));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(6), interpolatedCoords(15), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(6));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(3), interpolatedCoords(15), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(3));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(3), interpolatedCoords(15), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(3));
+		t.draw();
         
         /* LID TOP */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(2), interpolatedCoords(2),  icon.getInterpolatedU(2),  icon.getInterpolatedV(2));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(2), interpolatedCoords(2),  icon.getInterpolatedU(14), icon.getInterpolatedV(2));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(2), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(14));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(2), interpolatedCoords(14), icon.getInterpolatedU(2),  icon.getInterpolatedV(14));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(2), interpolatedCoords(2), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(2));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(2), interpolatedCoords(2), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(2));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(2), interpolatedCoords(14), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(14));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(2), interpolatedCoords(14), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(14));
+		t.draw();
         
         /* LID BOTTOM */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(2),  icon.getInterpolatedU(2),  icon.getInterpolatedV(2));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(7), interpolatedCoords(2),  icon.getInterpolatedU(14), icon.getInterpolatedV(2));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(7), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(14));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(14), icon.getInterpolatedU(2),  icon.getInterpolatedV(14));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(2), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(2));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(7), interpolatedCoords(2), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(2));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(7), interpolatedCoords(14), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(14));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(14), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(14));
+		t.draw();
         
         GL11.glPopMatrix();
 	}
-	
-	private void renderBodyOverlay(TileDynamicChest tile, Tessellator t, Icon icon) {
+
+	private void renderBodyOverlay(TileDynamicChest tile, Tessellator t, IIcon IIcon) {
 		/* BODY FRONT */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(15), interpolatedCoords(1), icon.getInterpolatedU(2),  icon.getInterpolatedV(15));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(15), interpolatedCoords(1), icon.getInterpolatedU(14), icon.getInterpolatedV(15));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7),  interpolatedCoords(1), icon.getInterpolatedU(14), icon.getInterpolatedV(7));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(7),  interpolatedCoords(1), icon.getInterpolatedU(2),  icon.getInterpolatedV(7));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(15), interpolatedCoords(1), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(15));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(15), interpolatedCoords(1), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(15));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(1), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(7));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(7), interpolatedCoords(1), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(7));
+		t.draw();
         
         /* BODY RIGHT */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(15), interpolatedCoords(2),  icon.getInterpolatedU(2),  icon.getInterpolatedV(15));
-        t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(15), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(15));
-        t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(7), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(7));
-        t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(7), interpolatedCoords(2),  icon.getInterpolatedU(2),  icon.getInterpolatedV(7));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(15), interpolatedCoords(2), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(15));
+		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(15), interpolatedCoords(14), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(15));
+		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(7), interpolatedCoords(14), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(7));
+		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(7), interpolatedCoords(2), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(7));
+		t.draw();
         
         /* BODY LEFT */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(15), interpolatedCoords(14), icon.getInterpolatedU(2),  icon.getInterpolatedV(15));
-        t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(15), interpolatedCoords(2),  icon.getInterpolatedU(14), icon.getInterpolatedV(15));
-        t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(7),  interpolatedCoords(2),  icon.getInterpolatedU(14), icon.getInterpolatedV(7));
-        t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(7),  interpolatedCoords(14), icon.getInterpolatedU(2),  icon.getInterpolatedV(7));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(15), interpolatedCoords(14), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(15));
+		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(15), interpolatedCoords(2), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(15));
+		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(7), interpolatedCoords(2), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(7));
+		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(7), interpolatedCoords(14), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(7));
+		t.draw();
         
         /* BODY BACK */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(15), interpolatedCoords(15), icon.getInterpolatedU(2),  icon.getInterpolatedV(15));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(15), interpolatedCoords(15), icon.getInterpolatedU(14), icon.getInterpolatedV(15));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(7),  interpolatedCoords(15), icon.getInterpolatedU(14), icon.getInterpolatedV(7));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7),  interpolatedCoords(15), icon.getInterpolatedU(2),  icon.getInterpolatedV(7));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(15), interpolatedCoords(15), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(15));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(15), interpolatedCoords(15), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(15));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(7), interpolatedCoords(15), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(7));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(15), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(7));
+		t.draw();
         
         /* BODY TOP */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(6), interpolatedCoords(2),  icon.getInterpolatedU(2),  icon.getInterpolatedV(2));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(2),  icon.getInterpolatedU(14), icon.getInterpolatedV(2));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(14));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(6), interpolatedCoords(14), icon.getInterpolatedU(2),  icon.getInterpolatedV(14));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(6), interpolatedCoords(2), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(2));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(2), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(2));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(14), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(14));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(6), interpolatedCoords(14), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(14));
+		t.draw();
         
         /* BODY BOTTOM */
         t.startDrawingQuads();
         if (tile.hasWorldObj()) {
-        	setBrightness(tile.worldObj, tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
-        }
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(16), interpolatedCoords(2),  icon.getInterpolatedU(2),  icon.getInterpolatedV(2));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(16), interpolatedCoords(2),  icon.getInterpolatedU(14), icon.getInterpolatedV(2));
-        t.addVertexWithUV(interpolatedCoords(2),  interpolatedCoords(16), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(14));
-        t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(16), interpolatedCoords(14), icon.getInterpolatedU(2),  icon.getInterpolatedV(14));
-        t.draw();
+			setBrightness(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord, ColoredChests.instance.blockColoredChest);
+		}
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(16), interpolatedCoords(2), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(2));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(16), interpolatedCoords(2), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(2));
+		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(16), interpolatedCoords(14), IIcon.getInterpolatedU(14), IIcon.getInterpolatedV(14));
+		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(16), interpolatedCoords(14), IIcon.getInterpolatedU(2), IIcon.getInterpolatedV(14));
+		t.draw();
 	}
 	
 	private static void setBrightness(IBlockAccess blockAccess, int i, int j, int k, Block block) {
@@ -265,7 +259,7 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 	
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1, double d2, float f) {
-		renderColoredChestAt((TileDynamicChest) tileentity, d0, d1, d2, f);
+		renderDynamicChestAt((TileDynamicChest) tileentity, d0, d1, d2, f);
 	}
 
 	@Override
@@ -285,8 +279,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		if (type == ItemRenderType.ENTITY) {
 			GL11.glTranslated(-.5, -.5, -.5);
 		}
-		
-		TileEntityRenderer.instance.renderTileEntityAt(new TileDynamicChest(), 0, 0, 0, 0);
+
+		TileEntityRendererDispatcher.instance.renderTileEntityAt(new TileDynamicChest(), 0, 0, 0, 0);
 
 		GL11.glPopMatrix();
 	}

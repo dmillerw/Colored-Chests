@@ -1,40 +1,39 @@
 package dmillerw.cchests.block.tile;
 
-import dmillerw.cchests.ColoredChests;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class TileChest extends TileEntity implements IInventory {
 
 	private ItemStack[] chestContents = new ItemStack[36];
 
 	public String customName;
-	
+
 	public ForgeDirection orientation;
-	
-    public float lidAngle;
-    public float prevLidAngle;
 
-    public int numUsingPlayers;
-    private int ticksSinceSync;
-    
-    @Override
-    public void updateEntity() {
-    	super.updateEntity();
-        float f;
+	public float lidAngle;
+	public float prevLidAngle;
 
-        this.prevLidAngle = this.lidAngle;
-        f = 0.1F;
-        double d0;
+	public int numUsingPlayers;
+	private int ticksSinceSync;
+
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		float f;
+
+		this.prevLidAngle = this.lidAngle;
+		f = 0.1F;
+		double d0;
 
 		if (this.numUsingPlayers > 0 && this.lidAngle == 0.0F) {
 			double d1 = (double) this.xCoord + 0.5D;
@@ -67,19 +66,21 @@ public abstract class TileChest extends TileEntity implements IInventory {
 				this.lidAngle = 0.0F;
 			}
 		}
-    }
+	}
 
-    @Override
-    public Packet getDescriptionPacket() {
-    	NBTTagCompound nbt = new NBTTagCompound();
-    	this.writeToNBT(nbt);
-    	return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, nbt);
-    }
-    
-    public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
-    	this.readFromNBT(pkt.data);
-    }
-    
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeToNBT(nbt);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, nbt);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		this.readFromNBT(pkt.func_148857_g());
+	}
+
+	@Override
 	public boolean receiveClientEvent(int par1, int par2) {
 		if (par1 == 1) {
 			this.numUsingPlayers = par2;
@@ -89,34 +90,34 @@ public abstract class TileChest extends TileEntity implements IInventory {
 		}
 	}
 
-	public void openChest() {
+	public void openInventory() {
 		if (this.numUsingPlayers < 0) {
 			this.numUsingPlayers = 0;
 		}
 
-        ++this.numUsingPlayers;
-        this.worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, this.getBlockType().blockID, 1, this.numUsingPlayers);
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.getBlockType().blockID);
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord - 1, this.zCoord, this.getBlockType().blockID);
-    }
+		++this.numUsingPlayers;
+		this.worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, this.getBlockType(), 1, this.numUsingPlayers);
+		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.getBlockType());
+		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord - 1, this.zCoord, this.getBlockType());
+	}
 
-    public void closeChest() {
+	public void closeInventory() {
 		if (this.numUsingPlayers < 0) {
 			this.numUsingPlayers = 0;
 		}
-    	
-    	--this.numUsingPlayers;
-        this.worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, this.getBlockType().blockID, 1, this.numUsingPlayers);
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.getBlockType().blockID);
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord - 1, this.zCoord, this.getBlockType().blockID);
-    }
-    
+
+		--this.numUsingPlayers;
+		this.worldObj.addBlockEvent(this.xCoord, this.yCoord, this.zCoord, this.getBlockType(), 1, this.numUsingPlayers);
+		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.getBlockType());
+		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord - 1, this.zCoord, this.getBlockType());
+	}
+
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
-		
+
 		this.orientation = ForgeDirection.getOrientation(par1NBTTagCompound.getByte("orientation"));
-		
-		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items");
+
+		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items", 0);
 		this.chestContents = new ItemStack[this.getSizeInventory()];
 
 		if (par1NBTTagCompound.hasKey("CustomName")) {
@@ -124,8 +125,7 @@ public abstract class TileChest extends TileEntity implements IInventory {
 		}
 
 		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist
-					.tagAt(i);
+			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.getCompoundTagAt(i);
 			int j = nbttagcompound1.getByte("Slot") & 255;
 
 			if (j >= 0 && j < this.chestContents.length) {
@@ -133,15 +133,15 @@ public abstract class TileChest extends TileEntity implements IInventory {
 						.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
-		
+
 		readCustomNBT(par1NBTTagCompound);
 	}
 
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
-		
+
 		par1NBTTagCompound.setByte("orientation", (byte) ((this.orientation != null) ? this.orientation.ordinal() : 0));
-		
+
 		NBTTagList nbttaglist = new NBTTagList();
 
 		for (int i = 0; i < this.chestContents.length; ++i) {
@@ -155,22 +155,21 @@ public abstract class TileChest extends TileEntity implements IInventory {
 
 		par1NBTTagCompound.setTag("Items", nbttaglist);
 
-		if (this.isInvNameLocalized()) {
+		if (this.hasCustomInventoryName()) {
 			par1NBTTagCompound.setString("CustomName", this.customName);
 		}
-		
+
 		writeCustomNBT(par1NBTTagCompound);
 	}
-    
+
 	@Override
 	public int getSizeInventory() {
 		return 27;
 	}
 
-	public ItemStack getStackInSlot(int par1)
-    {
-        return this.chestContents[par1];
-    }
+	public ItemStack getStackInSlot(int par1) {
+		return this.chestContents[par1];
+	}
 
 	public ItemStack decrStackSize(int par1, int par2) {
 		if (this.chestContents[par1] != null) {
@@ -179,7 +178,7 @@ public abstract class TileChest extends TileEntity implements IInventory {
 			if (this.chestContents[par1].stackSize <= par2) {
 				itemstack = this.chestContents[par1];
 				this.chestContents[par1] = null;
-				this.onInventoryChanged();
+				this.markDirty();
 				return itemstack;
 			} else {
 				itemstack = this.chestContents[par1].splitStack(par2);
@@ -188,7 +187,7 @@ public abstract class TileChest extends TileEntity implements IInventory {
 					this.chestContents[par1] = null;
 				}
 
-				this.onInventoryChanged();
+				this.markDirty();
 				return itemstack;
 			}
 		} else {
@@ -213,14 +212,14 @@ public abstract class TileChest extends TileEntity implements IInventory {
 			par2ItemStack.stackSize = this.getInventoryStackLimit();
 		}
 
-		this.onInventoryChanged();
+		this.markDirty();
 	}
 
-	public String getInvName() {
-		return this.isInvNameLocalized() ? this.customName : "container.chest";
+	public String getInventoryName() {
+		return this.hasCustomInventoryName() ? this.customName : "container.chest";
 	}
 
-	public boolean isInvNameLocalized() {
+	public boolean hasCustomInventoryName() {
 		return this.customName != null && this.customName.length() > 0;
 	}
 
@@ -231,7 +230,7 @@ public abstract class TileChest extends TileEntity implements IInventory {
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : entityplayer.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
+		return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : entityplayer.getDistanceSq((double) this.xCoord + 0.5D, (double) this.yCoord + 0.5D, (double) this.zCoord + 0.5D) <= 64.0D;
 	}
 
 	@Override
@@ -241,12 +240,12 @@ public abstract class TileChest extends TileEntity implements IInventory {
 
 	@Override // I should not have to do this... :|
 	public abstract Block getBlockType();
-	
+
 	@Override // Or this...
 	public abstract int getBlockMetadata();
-	
+
 	public abstract void writeCustomNBT(NBTTagCompound tag);
-	
+
 	public abstract void readCustomNBT(NBTTagCompound tag);
-	
+
 }

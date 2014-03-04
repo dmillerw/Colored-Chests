@@ -1,24 +1,17 @@
 package dmillerw.cchests.client.render;
 
-import net.minecraft.block.Block;
+import dmillerw.cchests.block.tile.TileColoredChest;
+import dmillerw.cchests.lib.ModInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
-
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import dmillerw.cchests.block.tile.TileColoredChest;
-import dmillerw.cchests.client.handler.TextureHandler;
-import dmillerw.cchests.lib.ModInfo;
 
 public class RenderColoredChest extends TileEntitySpecialRenderer implements IItemRenderer {
 
@@ -66,11 +59,6 @@ public class RenderColoredChest extends TileEntitySpecialRenderer implements IIt
         f1 = 1.0F - f1;
         f1 = 1.0F - f1 * f1 * f1;
 
-        ItemStack below = new ItemStack(Block.stone);
-        if (tile.hasWorldObj() && tile.worldObj.getBlockId(tile.xCoord, tile.yCoord - 1, tile.zCoord) > 0) {
-        	below = new ItemStack(tile.worldObj.getBlockId(tile.xCoord, tile.yCoord - 1, tile.zCoord), 1, tile.worldObj.getBlockMetadata(tile.xCoord, tile.yCoord - 1, tile.zCoord));
-        }
-        
         Minecraft.getMinecraft().renderEngine.bindTexture(RES_NORMAL_SINGLE);
         
         this.chestModel.chestLid.rotateAngleX = -(f1 * (float)Math.PI / 2.0F);
@@ -110,9 +98,9 @@ public class RenderColoredChest extends TileEntitySpecialRenderer implements IIt
 		if (type == ItemRenderType.ENTITY) {
 			GL11.glTranslated(-.5, -.5, -.5);
 		}
-		
-		TileEntityRenderer.instance.renderTileEntityAt(new TileColoredChest(item.getItemDamage()), 0, 0, 0, 0);
-		
+
+		TileEntityRendererDispatcher.instance.renderTileEntityAt(new TileColoredChest(item.getItemDamage()), 0, 0, 0, 0);
+
 		GL11.glPopMatrix();
 	}
 
