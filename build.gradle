@@ -23,13 +23,13 @@ apply plugin: 'forge'
 
 archivesBaseName = "Chests+"
 group = "dmillerw"
-version = baseVersion
+version = "2.0.0"
 ext.modId = "chestsplus"
 
-if (Boolean.valueOf(isSnapshot))
-    version += '-SNAPSHOT'
-if (System.getenv().containsKey('BUILD_NUMBER'))
-    version += "-b${System.getenv('BUILD_NUMBER')}"
+// if (Boolean.valueOf(isSnapshot))
+version += '-SNAPSHOT'
+// if (System.getenv().containsKey('BUILD_NUMBER'))
+//     version += "-b${System.getenv('BUILD_NUMBER')}"
 
 minecraft {
     version = "1.7.2-10.12.0.1024"
