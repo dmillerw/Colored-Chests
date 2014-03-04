@@ -22,8 +22,8 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 version = config.mod_version
-group = "com.dmillwerw.remoteIO"
-archivesBaseName = "RemoteIO"
+group = "dmillerw.chestsplus"
+archivesBaseName = "Chests+"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
