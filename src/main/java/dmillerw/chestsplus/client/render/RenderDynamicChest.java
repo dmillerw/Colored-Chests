@@ -80,27 +80,25 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		Block mimick = tile.mimickStack != null ? UtilItem.getBlock(tile.mimickStack) : Blocks.stone;
 		int mimickMeta = tile.mimickStack != null ? tile.mimickStack.getItemDamage() : 0;
 
-		int renderColor = mimick.getRenderColor(mimickMeta);
-
-		setGLColor(renderColor);
-
-		// Transparency and handling
-		if (mimick.getRenderBlockPass() == 1) {
-			GL11.glEnable(GL11.GL_BLEND);
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 0, 1);
-		}
-
 		this.chestModel.chestLid.rotateAngleX = -(f1 * (float) Math.PI / 2.0F);
 		this.chestModel.chestKnob.rotateAngleX = this.chestModel.chestLid.rotateAngleX;
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 
+		int renderColor = mimick.getRenderColor(mimickMeta);
+
+		if (mimick.getRenderBlockPass() != 1) {
+			setGLColor(renderColor);
+		}
+
+		// Transparency and handling
+		GL11.glEnable(GL11.GL_BLEND);
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+
 		renderLidOverlay(tile, t, mimick, mimickMeta);
 		renderBodyOverlay(tile, t, mimick, mimickMeta);
 
-		if (mimick.getRenderBlockPass() == 1) {
-			GL11.glDisable(GL11.GL_BLEND);
-		}
+		GL11.glDisable(GL11.GL_BLEND);
 
 		GL11.glColor4f(1, 1, 1, 1);
 
