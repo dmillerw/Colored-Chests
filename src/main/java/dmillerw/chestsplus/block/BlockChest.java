@@ -85,7 +85,8 @@ public abstract class BlockChest extends BlockContainer implements IRaytracable 
 					if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == ChestsPlus.instance.itemKey) {
 						if (tile.isOwner(player)) {
 							tile.locked = !tile.locked;
-							//TODO sound
+							String msg = tile.locked ? "Locked" : "Unlocked";
+							player.addChatComponentMessage(new ChatComponentText(msg));
 							return true;
 						}
 					}
