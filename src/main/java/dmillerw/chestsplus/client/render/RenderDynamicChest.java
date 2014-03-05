@@ -146,7 +146,6 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(2), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(2));
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(2), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(14));
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(2), interpolatedCoords(14), icon.getInterpolatedU(2), icon.getInterpolatedV(14));
-		t.draw();
 
 		// Fix for grass rendering color oddly
 		if (block == Blocks.grass) {
@@ -154,8 +153,6 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		}
 
 		/* LID FRONT */
-		t.startDrawingQuads();
-
 		t.setNormal(0, 0, -1);
 
 		icon = block.getIcon(2, meta);
@@ -164,11 +161,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(1), icon.getInterpolatedU(14), icon.getInterpolatedV(6));
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(3), interpolatedCoords(1), icon.getInterpolatedU(14), icon.getInterpolatedV(3));
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(3), interpolatedCoords(1), icon.getInterpolatedU(2), icon.getInterpolatedV(3));
-		t.draw();
 
         /* LID RIGHT */
-		t.startDrawingQuads();
-
 		t.setNormal(1, 0, 0);
 
 		icon = block.getIcon(5, meta);
@@ -177,11 +171,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(6), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(6));
 		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(3), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(3));
 		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(3), interpolatedCoords(2), icon.getInterpolatedU(2), icon.getInterpolatedV(3));
-		t.draw();
-        
-        /* LID LEFT */
-		t.startDrawingQuads();
 
+        /* LID LEFT */
 		t.setNormal(-1, 0, 0);
 
 		icon = block.getIcon(4, meta);
@@ -190,11 +181,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(6), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(6));
 		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(3), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(3));
 		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(3), interpolatedCoords(14), icon.getInterpolatedU(2), icon.getInterpolatedV(3));
-		t.draw();
-        
-        /* LID BACK */
-		t.startDrawingQuads();
 
+        /* LID BACK */
 		t.setNormal(0, 0, 1);
 
 		icon = block.getIcon(3, meta);
@@ -203,11 +191,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(6), interpolatedCoords(15), icon.getInterpolatedU(14), icon.getInterpolatedV(6));
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(3), interpolatedCoords(15), icon.getInterpolatedU(14), icon.getInterpolatedV(3));
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(3), interpolatedCoords(15), icon.getInterpolatedU(2), icon.getInterpolatedV(3));
-		t.draw();
-        
-        /* LID BOTTOM */
-		t.startDrawingQuads();
 
+        /* LID BOTTOM */
 		t.setNormal(0, 1, 0);
 
 		icon = block.getIcon(0, meta);
@@ -216,6 +201,7 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(7), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(2));
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(7), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(14));
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(14), icon.getInterpolatedU(2), icon.getInterpolatedV(14));
+
 		t.draw();
 
 		GL11.glPopMatrix();
@@ -233,11 +219,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(15), interpolatedCoords(1), icon.getInterpolatedU(14), icon.getInterpolatedV(15));
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(1), icon.getInterpolatedU(14), icon.getInterpolatedV(7));
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(7), interpolatedCoords(1), icon.getInterpolatedU(2), icon.getInterpolatedV(7));
-		t.draw();
-        
-        /* BODY RIGHT */
-		t.startDrawingQuads();
 
+        /* BODY RIGHT */
 		t.setNormal(1, 0, 0);
 
 		icon = block.getIcon(5, meta);
@@ -246,11 +229,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(15), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(15));
 		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(7), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(7));
 		t.addVertexWithUV(interpolatedCoords(15), interpolatedCoords(7), interpolatedCoords(2), icon.getInterpolatedU(2), icon.getInterpolatedV(7));
-		t.draw();
-        
-        /* BODY LEFT */
-		t.startDrawingQuads();
 
+        /* BODY LEFT */
 		t.setNormal(-1, 0, 0);
 
 		icon = block.getIcon(4, meta);
@@ -259,11 +239,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(15), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(15));
 		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(7), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(7));
 		t.addVertexWithUV(interpolatedCoords(1), interpolatedCoords(7), interpolatedCoords(14), icon.getInterpolatedU(2), icon.getInterpolatedV(7));
-		t.draw();
-        
-        /* BODY BACK */
-		t.startDrawingQuads();
 
+        /* BODY BACK */
 		t.setNormal(0, 0, 1);
 
 		icon = block.getIcon(3, meta);
@@ -272,11 +249,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(15), interpolatedCoords(15), icon.getInterpolatedU(14), icon.getInterpolatedV(15));
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(7), interpolatedCoords(15), icon.getInterpolatedU(14), icon.getInterpolatedV(7));
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(7), interpolatedCoords(15), icon.getInterpolatedU(2), icon.getInterpolatedV(7));
-		t.draw();
-        
-        /* BODY TOP */
-		t.startDrawingQuads();
 
+        /* BODY TOP */
 		t.setNormal(0, -1, 0);
 
 		icon = block.getIcon(0, meta);
@@ -285,11 +259,8 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(2), icon.getInterpolatedU(14), icon.getInterpolatedV(2));
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(14));
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(6), interpolatedCoords(14), icon.getInterpolatedU(2), icon.getInterpolatedV(14));
-		t.draw();
 
         /* BODY BOTTOM */
-		t.startDrawingQuads();
-
 		t.setNormal(0, 1, 0);
 
 		icon = block.getIcon(0, meta);
