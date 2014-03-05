@@ -27,13 +27,10 @@ public class InteractionHandler {
 					if (!player.worldObj.isRemote) {
 						if (item.getItem() == Items.dye) {
 							ChestHandler.dye(player.worldObj, event.x, event.y, event.z, ChestsPlus.DYE_REVERSE_MAPPING[player.getCurrentEquippedItem().getItemDamage()]);
-						} else {
-							ChestHandler.mimick(player.worldObj, event.x, event.y, event.z, item.copy());
 						}
 					}
 
 					event.useItem = Event.Result.DENY;
-					event.useBlock = Event.Result.DENY;
 				}
 			} else if (player.isSneaking()) {
 				ItemStack held = player.getHeldItem();
@@ -46,18 +43,24 @@ public class InteractionHandler {
 							} else if (held.getItem() == Items.water_bucket) {
 								ChestHandler.vanilla(player.worldObj, event.x, event.y, event.z);
 							}
+
+							event.useItem = Event.Result.DENY;
+							event.useBlock = Event.Result.DENY;
 						} else if (block == ChestsPlus.instance.blockDynamicChest) {
 							if (held.getItem() instanceof ItemBlock) {
 								ChestHandler.mimick(player.worldObj, event.x, event.y, event.z, player.getCurrentEquippedItem().copy());
 							}
+
+							event.useItem = Event.Result.DENY;
+							event.useBlock = Event.Result.DENY;
 						}
 					} else if (block == ChestsPlus.instance.blockDynamicChest) {
 						ChestHandler.vanilla(player.worldObj, event.x, event.y, event.z);
+
+						event.useItem = Event.Result.DENY;
+						event.useBlock = Event.Result.DENY;
 					}
 				}
-
-				event.useItem = Event.Result.DENY;
-				event.useBlock = Event.Result.DENY;
 			}
 		}
 	}
