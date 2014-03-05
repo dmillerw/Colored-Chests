@@ -85,22 +85,27 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 
-		int renderColor = mimick.getRenderColor(mimickMeta);
+		if (tile.hasWorldObj()) {
+			int renderColor = mimick.getRenderColor(mimickMeta);
 
-		if (mimick.getRenderBlockPass() != 1) {
-			setGLColor(renderColor);
+			if (mimick.getRenderBlockPass() != 1) {
+				setGLColor(renderColor);
+			}
+
+			// Transparency and handling
+			GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+			GL11.glEnable(GL11.GL_BLEND);
+			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		}
-
-		// Transparency and handling
-		GL11.glEnable(GL11.GL_BLEND);
-		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
 		renderLidOverlay(tile, t, mimick, mimickMeta);
 		renderBodyOverlay(tile, t, mimick, mimickMeta);
 
-		GL11.glDisable(GL11.GL_BLEND);
+		if (tile.hasWorldObj()) {
+			GL11.glDisable(GL11.GL_BLEND);
 
-		GL11.glColor4f(1, 1, 1, 1);
+			GL11.glColor4f(1, 1, 1, 1);
+		}
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(RES_NORMAL_SINGLE);
 
@@ -281,7 +286,7 @@ public class RenderDynamicChest extends TileEntitySpecialRenderer implements IIt
 		t.addVertexWithUV(interpolatedCoords(14), interpolatedCoords(6), interpolatedCoords(14), icon.getInterpolatedU(14), icon.getInterpolatedV(14));
 		t.addVertexWithUV(interpolatedCoords(2), interpolatedCoords(6), interpolatedCoords(14), icon.getInterpolatedU(2), icon.getInterpolatedV(14));
 		t.draw();
-        
+
         /* BODY BOTTOM */
 		t.startDrawingQuads();
 
