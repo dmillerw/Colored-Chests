@@ -4,6 +4,7 @@ import dmillerw.chestsplus.ChestsPlus;
 import dmillerw.chestsplus.block.tile.TileChest;
 import dmillerw.chestsplus.block.tile.TileColoredChest;
 import dmillerw.chestsplus.block.tile.TileDynamicChest;
+import dmillerw.chestsplus.item.ItemDimensionalPocket;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +14,26 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class ChestHandler {
+
+	public static int getSize(byte tier) {
+		return tier == -1 ? 27 : ItemDimensionalPocket.INVENTORY_SIZES[tier];
+	}
+
+	public static int getRows(byte tier) {
+		return getColumns(tier) / getSize(tier);
+	}
+
+	public static int getColumns(byte tier) {
+		switch (tier) {
+			case 0:
+			case 1:
+				return 9;
+			case 2:
+				return 12;
+			default:
+				return 9;
+		}
+	}
 
 	public static final ForgeDirection[] SIDE_DIRS = new ForgeDirection[]{
 			ForgeDirection.EAST,
@@ -95,6 +116,14 @@ public class ChestHandler {
 		} else if (tile != null && tile instanceof TileDynamicChest) {
 			((TileDynamicChest) tile).mimickStack = stack;
 			world.markBlockForUpdate(x, y, z);
+		}
+	}
+
+	public static void update(World world, int x, int y, int z, byte tier) {
+		TileEntity tile = world.getTileEntity(x, y, z);
+
+		if (tile instanceof TileChest) {
+			((TileChest) tile).tier = tier;
 		}
 	}
 

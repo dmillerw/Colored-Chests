@@ -5,12 +5,14 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import dmillerw.chestsplus.block.BlockColoredChest;
 import dmillerw.chestsplus.block.BlockDynamicChest;
 import dmillerw.chestsplus.block.item.ItemBlockColoredChest;
 import dmillerw.chestsplus.block.tile.TileColoredChest;
 import dmillerw.chestsplus.block.tile.TileDynamicChest;
+import dmillerw.chestsplus.core.handler.GuiHandler;
 import dmillerw.chestsplus.core.handler.InteractionHandler;
 import dmillerw.chestsplus.core.proxy.CommonProxy;
 import dmillerw.chestsplus.item.ItemKey;
@@ -72,6 +74,8 @@ public class ChestsPlus {
 
 		/* KEY RECIPE */
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemKey), "  I", "III", "I I", 'I', Items.iron_ingot));
+
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
 
 		MinecraftForge.EVENT_BUS.register(new InteractionHandler());
 

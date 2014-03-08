@@ -74,7 +74,11 @@ public abstract class BlockChest extends BlockContainer implements IRaytracable 
 								return true;
 							}
 
-							player.displayGUIChest((IInventory) tile);
+							if (tile.tier == -1) {
+								player.displayGUIChest((IInventory) tile);
+							} else {
+								player.openGui(ChestsPlus.instance, tile.tier, world, x, y, z);
+							}
 							return true;
 						}
 					} else {

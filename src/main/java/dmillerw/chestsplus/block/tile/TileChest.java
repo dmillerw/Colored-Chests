@@ -1,5 +1,6 @@
 package dmillerw.chestsplus.block.tile;
 
+import dmillerw.chestsplus.item.ItemDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -14,7 +15,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class TileChest extends TileEntity implements IInventory {
 
-	private ItemStack[] chestContents = new ItemStack[36];
+	private ItemStack[] chestContents = new ItemStack[27];
 
 	public String customName;
 
@@ -25,6 +26,8 @@ public abstract class TileChest extends TileEntity implements IInventory {
 
 	public int numUsingPlayers;
 	private int ticksSinceSync;
+
+	public byte tier = -1;
 
 	public String owner = "";
 
@@ -150,6 +153,11 @@ public abstract class TileChest extends TileEntity implements IInventory {
 			}
 		}
 
+		this.owner = par1NBTTagCompound.getString("owner");
+		this.locked = par1NBTTagCompound.getBoolean("locked");
+
+		this.tier = par1NBTTagCompound.getByte("tier");
+
 		readCustomNBT(par1NBTTagCompound);
 	}
 
@@ -175,12 +183,17 @@ public abstract class TileChest extends TileEntity implements IInventory {
 			par1NBTTagCompound.setString("CustomName", this.customName);
 		}
 
+		par1NBTTagCompound.setString("owner", owner);
+		par1NBTTagCompound.setBoolean("locked", locked);
+
+		par1NBTTagCompound.setByte("tier", tier);
+
 		writeCustomNBT(par1NBTTagCompound);
 	}
 
 	@Override
 	public int getSizeInventory() {
-		return 27;
+		return tier == -1 ? 27 : ItemDimensionalPocket.INVENTORY_SIZES[tier];
 	}
 
 	public ItemStack getStackInSlot(int par1) {
