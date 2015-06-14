@@ -1,0 +1,20 @@
+tile.coloredChest.white.name = White Chest
+tile.coloredChest.orange.name = Orange Chest
+tile.coloredChest.magenta.name = Magenta Chest
+tile.coloredChest.lightBlue.name = Light-Blue Chest
+tile.coloredChest.yellow.name = Yellow Chest
+tile.coloredChest.lime.name = Lime Chest
+tile.coloredChest.pink.name = Pink Chest
+tile.coloredChest.gray.name Gray Chest
+tile.coloredChest.silver.name = Silver Chest
+tile.coloredChest.cyan.name = Cyan Chest
+tile.coloredChest.purple.name = Purple Chest
+tile.coloredChest.blue.name = Blue Chest
+tile.coloredChest.brown.name = Brown Chest
+tile.coloredChest.green.name = Green Chest
+tile.coloredChest.red.name = Red Chest
+tile.coloredChest.black.name = Black Chest
+
+tile.dynamicChest.name = Dynamic Chest
+
+item.key.name = Iron Key
