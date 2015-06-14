@@ -54,7 +54,7 @@ public class RayTracer {
 
 		double eyeHeight = world.isRemote ? player.getEyeHeight() - player.getDefaultEyeHeight() : player.getEyeHeight();
 		Vec3 lookVec = player.getLookVec();
-		Vec3 origin = world.getWorldVec3Pool().getVecFromPool(player.posX, player.posY + eyeHeight, player.posZ);
+		Vec3 origin = Vec3.createVectorHelper(player.posX, player.posY + eyeHeight, player.posZ);
 		Vec3 direction = origin.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
 
 		return doRaytrace(world, x, y, z, origin, direction);
