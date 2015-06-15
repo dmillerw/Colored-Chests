@@ -1,7 +1,7 @@
 [
 {
-	"modid": "CChests",
-	"name": "Colored Chests",
+	"modid": "chestsplus",
+	"name": "Chests+",
 	"version": "@VERSION@",
 	"description": "Need I say more?",
 	"authors": [ "dmillerw" ],
